@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101b25" />
+  <title>Atlas — The world, in the news</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Atlas home">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c4 4 6 8 6 12s-2 8-6 12c-4-4-6-8-6-12s2-8 6-12Z"/></svg></span>
+        <span>atlas<span class="brand-period">.</span></span>
+      </a>
+      <div class="topbar-center"><span class="live-dot"></span><span>THE WORLD, IN THE NEWS</span></div>
+      <div class="topbar-right"><span class="date-label" id="today"></span><button class="icon-button" id="aboutButton" aria-label="About Atlas" title="About Atlas"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button></div>
+    </header>
+
+    <main>
+      <section class="intro-row">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> A DIFFERENT PERSPECTIVE</div><h1>News has no <em>borders.</em></h1><p class="intro-copy">Choose a country. See what matters there.</p></div>
+        <div class="map-tools"><label class="search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><input id="countrySearch" type="search" placeholder="Find a country" autocomplete="off" /><kbd>/</kbd><div class="search-results" id="searchResults"></div></label><div class="map-hint"><span class="hint-pulse"></span> HOVER TO EXPLORE <span class="hint-divider">·</span> CLICK TO READ</div></div>
+      </section>
+
+      <section class="map-section" aria-label="Interactive world map">
+        <div class="map-frame"><div class="map-grid"></div><div class="map-glow"></div><svg id="worldMap" role="img" aria-label="Interactive map of the world"></svg>
+          <div class="map-tooltip" id="mapTooltip"><span class="tooltip-kicker">EXPLORE</span><strong></strong><span class="tooltip-local-time" id="tooltipLocalTime"></span><span class="tooltip-action">Click to see the latest <span>↗</span></span></div>
+          <div class="daylight-live"><span class="sun-symbol">☀</span><span>LIVE DAYLIGHT</span><time id="worldUTC">--:--:-- UTC</time></div>
+          <div class="country-clock" id="countryClock" hidden><div class="clock-eyebrow"><span class="clock-live-dot"></span><span data-clock-country></span></div><div class="clock-main"><time data-clock-time></time><span class="clock-status" data-clock-status></span></div><div class="clock-place" data-clock-place></div><div class="clock-date" data-clock-date></div><div class="clock-note" data-clock-note></div></div>
+          <div class="map-caption"><span class="caption-dot"></span> EVERY COUNTRY HAS A STORY</div>
+          <div class="map-legend"><span class="daylight-swatch"></span> DAYLIGHT <span class="night-swatch"></span> NIGHT</div>
+          <button class="reset-map" id="resetMap" aria-label="Reset map view" title="Reset map view"><svg viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 6M4 4v6h6"/></svg></button>
+        </div>
+      </section>
+      <footer class="page-footer"><span>WORLDWIDE, WITHOUT THE NOISE.</span><span class="footer-center">Independent perspective <i>✳</i> Since today</span><span class="footer-right">SCROLL TO EXPLORE <span>↓</span></span></footer>
+      <section class="below-fold"><div class="eyebrow"><span class="eyebrow-line"></span> THE BIG PICTURE</div><h2>One world. <em>Many stories.</em></h2><p>Every headline looks different from somewhere else. Start exploring.</p><div class="region-chips"><button data-country="United States">North America <span>↗</span></button><button data-country="Brazil">South America <span>↗</span></button><button data-country="United Kingdom">Europe <span>↗</span></button><button data-country="Nigeria">Africa <span>↗</span></button><button data-country="India">Asia <span>↗</span></button><button data-country="Australia">Oceania <span>↗</span></button></div></section>
+    </main>
+  </div>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="news-drawer" id="newsDrawer" aria-hidden="true"><div class="drawer-top"><div><div class="eyebrow"><span class="eyebrow-line"></span> COUNTRY BRIEFING</div><h2 id="drawerCountry">Country</h2><div class="drawer-meta"><span class="live-dot"></span> TOP STORIES <b>·</b> UPDATED <span id="updatedAt">JUST NOW</span></div></div><button class="close-drawer" id="closeDrawer" aria-label="Close country news"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="drawer-local-time" id="drawerLocalTime" hidden><div class="clock-main"><time data-clock-time></time><span class="clock-status" data-clock-status></span></div><div class="drawer-time-detail"><span data-clock-place></span><span data-clock-date></span></div><div class="clock-note" data-clock-note></div></div><div class="drawer-controls"><span id="storyCount">20 STORIES</span><span>LIVE NEWS FEEDS <span class="spark">✳</span></span></div><div class="news-list" id="newsList"></div><div class="drawer-foot">YOU’RE ALL CAUGHT UP <span>✳</span></div></aside>
+  <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="aboutModal"><section class="about-modal"><button class="close-drawer" id="closeAbout" aria-label="Close"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button><div class="brand-mark"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c4 4 6 8 6 12s-2 8-6 12c-4-4-6-8-6-12s2-8 6-12Z"/></svg></div><div class="eyebrow">A WORLD OF PERSPECTIVES</div><h2>Meet Atlas<span class="brand-period">.</span></h2><p>An interactive window into the stories shaping every corner of our world. Hover over a country to find your place, then click to explore its headlines.</p><p class="demo-note">Explore up to 20 recent headlines about each country from Bing and Google News feeds. Click a headline to read the story. Start Atlas.cmd launches the local news reader. Coverage and images vary by source.</p></section></div>
+  <script src="country-times.js"></script>
+  <script src="daylight.js"></script>
+  <script src="news.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
